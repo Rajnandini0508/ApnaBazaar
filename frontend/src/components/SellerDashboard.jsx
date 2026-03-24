@@ -1,5 +1,5 @@
 import React from 'react'
-import Nav from './NaV.JSX'
+import Nav from "./Nav.jsx"
 import { useSelector } from 'react-redux'
 import { BsShop } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom'
