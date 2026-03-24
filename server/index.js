@@ -18,7 +18,7 @@ const server=http.createServer(app)
 
 const io=new Server(server,{
     cors:{
-    origin: "apna-bazaar-7i22.vercel.app",
+    origin: "https://apna-bazaar-7i22.vercel.app",
     credentials: true,
     methods:['POST','GET']
 }})
@@ -28,7 +28,7 @@ app.set("io",io)
 const port=process.env.PORT || 5000
 
 app.use(cors({
-    origin: "apna-bazaar-7i22.vercel.app",
+    origin: "https://apna-bazaar-7i22.vercel.app",
     credentials: true
 }))
 app.use(express.json())
