@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import Nav from './NaV.JSX'
+import Nav from "./Nav.jsx"
 import { useNavigate } from 'react-router-dom'
 import { categories } from '../category'
 import CategoryCard from './CategoryCard'

@@ -1,6 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import axios from 'axios'
-import Nav from './NaV.JSX'
+import Nav from "./Nav.jsx"
 import { useSelector } from 'react-redux'
 import { serverUrl } from '../App'
 import DeliveryBoyTracking from './DeliveryBoyTracking'
