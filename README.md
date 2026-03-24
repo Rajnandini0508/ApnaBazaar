@@ -2,6 +2,8 @@
 ApnaBazaar is a full-stack MERN (MongoDB, Express, React, Node.js) based local marketplace application that connects users, sellers, and delivery partners on a single platform.
 It allows users to order items from nearby shops, sellers to manage orders, and delivery boys to handle deliveries efficiently.
 
+ Live Demo: https://apna-bazaar-7i22.vercel.app
+ 
 🚀 Features
 👤 User
 Register & Login
