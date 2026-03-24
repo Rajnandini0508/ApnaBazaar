@@ -30,7 +30,8 @@ const port=process.env.PORT || 5000
 app.use(cors({
     origin: "https://apna-bazaar-7i22.vercel.app",
     credentials: true
-}))
+}));
+
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api/auth",authRouter)
