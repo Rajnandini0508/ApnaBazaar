@@ -22,6 +22,15 @@ export const sendOtpMail=async(to,otp)=> {
     })
 }
 
+export const sendOrderOtpMail=async(email,otp)=> {
+    await transporter.sendMail({
+        from:process.env.EMAIL,
+        to:email,
+        subject:"Order OTP Confirmation",
+        html:`<p>Your OTP for your order is <b>${otp}<b>. Please share this with the delivery partner upon arrival.</p>`
+    })
+}
+
 export const sendDeliveryOtpMail=async(user,otp)=> {
     await transporter.sendMail({
         from:process.env.EMAIL,
