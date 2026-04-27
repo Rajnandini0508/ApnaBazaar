@@ -11,7 +11,7 @@ import basketImage from "../assets/Wide_Assortment.png";
 import banner from "../assets/banner3.png";
 import bannerMobile from '../assets/mobilebanner.png'
 import ShopCard from "./ShopCard";
-import { FaFacebook } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import girlAvatar from "../assets/girl.png";
@@ -303,14 +303,16 @@ function UserDashboard() {
                     {/* Social icons */}
                     <div className="flex items-center justify-center gap-4">
                         <a
-                            href="#"
-                            aria-label="Facebook"
+                            href="https://github.com/Rajnandini0508"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="GitHub"
                             className="w-9 h-9 flex items-center justify-center rounded-full 
                    bg-[#fff2ec] text-[#ff4d2d]
                    hover:bg-[#ff4d2d] hover:text-white
                    transition-all duration-300"
                         >
-                            <FaFacebook size={16} />
+                            <FaGithub size={16} />
                         </a>
 
                         <a
@@ -325,7 +327,9 @@ function UserDashboard() {
                         </a>
 
                         <a
-                            href="#"
+                            href="https://www.linkedin.com/in/rajnandini-gupta0508"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             aria-label="LinkedIn"
                             className="w-9 h-9 flex items-center justify-center rounded-full 
                    bg-[#fff2ec] text-[#ff4d2d]

@@ -9,72 +9,72 @@ import SellerItemCard from './SellerItemCard'
 import useGetSellerOrders from "../hooks/useGetSellerOrders";
 
 function SellerDashboard() {
-    const {myShopData}=useSelector(state=>state.seller)
-    const navigate=useNavigate()
+    const { myShopData } = useSelector(state => state.seller)
+    const navigate = useNavigate()
     useGetSellerOrders();
 
     return (
         <div className='w-full min-h-screen bg-[#fff9f6] flex flex-col items-center'>
-            <Nav/>
+            <Nav />
             {!myShopData &&
-            <div className='flex justify-center items-center p-4 sm:p-6'>
-                <div className='w-full max-w-md bg-white shadow-lg rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300'>
-                    <div className='flex flex-col items-center text-center'>
-                        <BsShop className='text-[#ff4d2d] w-16 h-16 sm:w-20 sm:h-20 mb-4'/>
-                        <h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-2'>Add your shop</h2>
-                        <p className='text-gray-600 mb-4 text-sm sm:text-base'>Register your shop and showcase your business to customers in your area.</p>
-                        <button className='bg-[#ff4d2d] text-white px-5 sm:px-6 py-2 rounded-full font-medium shadow-md hover:bg-orange-600 transition-colors duration-200'
-                        onClick={()=>navigate("/create-edit-shop")}>Get Started</button>
-                    </div>
-                </div>
-            </div>}
-
-            {myShopData && 
-            <div className='w-full flex flex-col items-center gap-6 px-4 sm:px-6'>
-                <h1 className='text-2xl sm:text-3xl text-gray-900 flex items-center gap-3 mt-8 text-center'>
-                    <BsShop className='text-[#ff4d2d] w-14 h-14'/>Welcome to {myShopData.name}</h1>
-                <div className='bg-white shadow-lg rounded-xl overflow-hidden border border-orange-100 hover:shadow-2xl transition-all duration-300 w-full max-w-3xl relative'>
-                    <div className='absolute top-4 right-4 bg-[#ff4d2d] text-white p-2 rounded-full shadow-md hover:bg-orange-600 transition-colors cursor-pointer' onClick={()=>navigate("/create-edit-shop")}>
-                        <FaPen size={20}/>
-                    </div>
-                    <img src={myShopData.image} alt={myShopData.name} className='w-full h-48 sm:h-64 object-cover'/>
-                    <div className='p-4 sm:p-6'>
-                        <h1 className='text-xl sm:text-2xl font-bold text-gray-800 mb-2'>{myShopData.name}</h1>
-                        {myShopData.phoneno && (
-                        <a
-                            href={`tel:${myShopData.phoneno}`}
-                            className="flex items-center gap-2 font-semibold text-[#ff4d2d] mb-2 hover:underline"
-                        >
-                            <FaPhone size={14} />
-                            {myShopData.phoneno}
-                        </a>
-                        )}
-                        <p className='text-gray-500'>{myShopData.city},{myShopData.state}</p>
-                        <p className='text-gray-500 mb-4'>{myShopData.address}</p>
-                    </div>
-                </div>
-               
-               {myShopData.items.length==0 && 
-                <div>
-                    <div className='flex justify-center items-center p-4 sm:p-6'>
-                        <div className='w-full max-w-md bg-white shadow-lg rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300'>
-                            <div className='flex flex-col items-center text-center'>
-                            <BsShop className='text-[#ff4d2d] w-16 h-16 sm:w-20 sm:h-20 mb-4'/>
-                            <h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-2'>Your Shop Item</h2>
-                            <p className='text-gray-600 mb-4 text-sm sm:text-base'>Showcase what your shop offers and connect with customers around you.</p>
+                <div className='flex justify-center items-center p-4 sm:p-6'>
+                    <div className='w-full max-w-md bg-white shadow-lg rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300'>
+                        <div className='flex flex-col items-center text-center'>
+                            <BsShop className='text-[#ff4d2d] w-16 h-16 sm:w-20 sm:h-20 mb-4' />
+                            <h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-2'>Add your shop</h2>
+                            <p className='text-gray-600 mb-4 text-sm sm:text-base'>Register your shop and showcase your business to customers in your area.</p>
                             <button className='bg-[#ff4d2d] text-white px-5 sm:px-6 py-2 rounded-full font-medium shadow-md hover:bg-orange-600 transition-colors duration-200'
-                                onClick={()=>navigate("/add-item")}>Add Item</button>
-                            </div>
+                                onClick={() => navigate("/create-edit-shop")}>Get Started</button>
                         </div>
                     </div>
                 </div>}
 
-                {myShopData.items.length>0 && 
-                <div className='flex flex-col items-center gap-4 w-full max-w-3xl'>
-                    {myShopData.items.map((item,index)=>(<SellerItemCard data={item} key={index}/>))}
+            {myShopData &&
+                <div className='w-full flex flex-col items-center gap-6 px-4 sm:px-6'>
+                    <h1 className='text-2xl sm:text-3xl text-gray-900 flex items-center gap-3 mt-8 text-center'>
+                        <BsShop className='text-[#ff4d2d] w-14 h-14' />Welcome to {myShopData.name}</h1>
+                    <div className='bg-white shadow-lg rounded-xl overflow-hidden border border-orange-100 hover:shadow-2xl transition-all duration-300 w-full max-w-3xl relative'>
+                        <div className='absolute top-4 right-4 bg-[#ff4d2d] text-white p-2 rounded-full shadow-md hover:bg-orange-600 transition-colors cursor-pointer' onClick={() => navigate("/create-edit-shop")}>
+                            <FaPen size={20} />
+                        </div>
+                        <img src={myShopData.image} alt={myShopData.name} className='w-full h-48 sm:h-64 object-cover' />
+                        <div className='p-4 sm:p-6'>
+                            <h1 className='text-xl sm:text-2xl font-bold text-gray-800 mb-2'>{myShopData.name}</h1>
+                            {myShopData.phoneno && (
+                                <a
+                                    href={`tel:${myShopData.phoneno}`}
+                                    className="flex items-center gap-2 font-semibold text-[#ff4d2d] mb-2 hover:underline"
+                                >
+                                    <FaPhone size={14} />
+                                    {myShopData.phoneno}
+                                </a>
+                            )}
+                            <p className='text-gray-500'>{myShopData.city},{myShopData.state}</p>
+                            <p className='text-gray-500 mb-4'>{myShopData.address}</p>
+                        </div>
+                    </div>
+
+                    {myShopData.items.length == 0 &&
+                        <div>
+                            <div className='flex justify-center items-center p-4 sm:p-6'>
+                                <div className='w-full max-w-md bg-white shadow-lg rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300'>
+                                    <div className='flex flex-col items-center text-center'>
+                                        <BsShop className='text-[#ff4d2d] w-16 h-16 sm:w-20 sm:h-20 mb-4' />
+                                        <h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-2'>Your Shop Item</h2>
+                                        <p className='text-gray-600 mb-4 text-sm sm:text-base'>Showcase what your shop offers and connect with customers around you.</p>
+                                        <button className='bg-[#ff4d2d] text-white px-5 sm:px-6 py-2 rounded-full font-medium shadow-md hover:bg-orange-600 transition-colors duration-200'
+                                            onClick={() => navigate("/add-item")}>Add Item</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>}
+
+                    {myShopData.items.length > 0 &&
+                        <div className='flex flex-col items-center gap-4 w-full max-w-3xl'>
+                            {myShopData.items.map((item, index) => (<SellerItemCard data={item} key={index} />))}
+                        </div>}
                 </div>}
-            </div>}
-            
+
         </div>
     )
 }
