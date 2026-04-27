@@ -24,7 +24,9 @@ import Shop from './pages/Shop'
 import { io } from 'socket.io-client'
 import { setSocket } from './redux/userSlice'
 
-export const serverUrl = "https://apnabazaar-vh0x.onrender.com"
+export const serverUrl = window.location.hostname === "localhost" 
+  ? "http://localhost:8000" 
+  : "https://apnabazaar-vh0x.onrender.com";
 
 function App(){
   const {userData}=useSelector(state=>state.user)

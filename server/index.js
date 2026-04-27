@@ -16,9 +16,15 @@ import { socketHandler } from './socket.js'
 const app=express()
 const server=http.createServer(app)
 
+const allowedOrigins = [
+    "https://apna-bazaar-7i22.vercel.app",
+    "https://apna-bazaar-mu.vercel.app",
+    "http://localhost:5173"
+];
+
 const io=new Server(server,{
     cors:{
-    origin: "https://apna-bazaar-7i22.vercel.app",
+    origin: allowedOrigins,
     credentials: true,
     methods:['POST','GET']
 }})
@@ -28,7 +34,13 @@ app.set("io",io)
 const port=process.env.PORT || 5000
 
 app.use(cors({
-    origin: "https://apna-bazaar-7i22.vercel.app",
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 

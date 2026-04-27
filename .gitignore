@@ -1,0 +1,16 @@
+# Root node_modules
+node_modules/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Backend
+server/node_modules/
+server/uploads/
+server/.env
+
+# OS files
+.DS_Store
+Thumbs.db
