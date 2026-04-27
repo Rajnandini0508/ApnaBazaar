@@ -7,11 +7,12 @@ import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey:import.meta.env.VITE_FIREBASE_APIKEY,
-  authDomain: "apnabazaar-6c6c8.firebaseapp.com",
-  projectId: "apnabazaar-6c6c8",
-  storageBucket: "apnabazaar-6c6c8.firebasestorage.app",
-  messagingSenderId: "611193321808",
-  appId: "1:611193321808:web:7ff78c6d9c50881577d455"
+  authDomain: "apna-bazar-96272.firebaseapp.com",
+  projectId: "apna-bazar-96272",
+  storageBucket: "apna-bazar-96272.firebasestorage.app",
+  messagingSenderId: "160714930438",
+  appId: "1:160714930438:web:62687cb7282ae7f89d4687",
+  measurementId: "G-NXSM3KE770"
 };
 
 // Initialize Firebase
