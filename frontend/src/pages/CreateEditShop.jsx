@@ -21,25 +21,13 @@ function CreateEditShop() {
     const [frontendImage, setFrontendImage] = useState(myShopData?.image || "")
     const [backendImage, setBackendImage] = useState("")
     const [loading, setLoading] = useState(false)
-    const [category, setCategory] = useState("")
-    const [phoneno, setPhoneno] = useState(myShopData?.phoneno || ""); //added 
+    const [mode, setMode] = useState(myShopData?.mode || "Order")
+    const [phoneno, setPhoneno] = useState(myShopData?.phoneno || "");
 
+    const modes = ["Order", "Booking", "Display"]
     const dispatch = useDispatch()
 
-    // const categories = ["Vegetable",
-    //     "Footwear",
-    //     "Grocery",
-    //     "Stationery",
-    //     "Bakery",
-    //     "Pharmacy",
-    //     "Electronic",
-    //     "Cafe",
-    //     "Fashion",
-    //     "Cosmetics",
-    //     "Generalstore",
-    //     "Tailor",
-    //     "Salon",
-    //     "Others"]
+   
 
     const handleImage = (e) => {
         const file = e.target.files[0]
@@ -55,26 +43,21 @@ function CreateEditShop() {
             setLoading(false)
             return
         }
-        // if (!category) {
-        //     alert("Please select a category")
-        //     setLoading(false)
-        //     return
-        // }
+    
         try {
             const formData = new FormData()
             formData.append("name", name)
             formData.append("city", city)
             formData.append("state", state)
-            formData.append("category", category)
             formData.append("address", address)
             formData.append("phoneno", phoneno)
+            formData.append("mode", mode)
             if (backendImage) {
                 formData.append("image", backendImage)
             }
             const result = await axios.post(`${serverUrl}/api/shop/create-edit`, formData,
                 { withCredentials: true })
             dispatch(setMyShopData(result.data))
-            // setLoading(false)
             navigate("/")
         } catch (error) {
             console.log(error)
@@ -111,16 +94,23 @@ function CreateEditShop() {
                         </div>}
                     </div>
 
-                    {/* <div>
-                        <label className='block text-sm font-medium text-gray-700 mb-1'>Select Category</label>
-                        <select className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500'
-                            onChange={(e) => setCategory(e.target.value)} value={category}>
-                            <option value="">Select Category</option>
-                            {categories.map((cate, index) => (
-                                <option value={cate} key={index}>{cate}</option>
+                    <div>
+                        <label className='block text-sm font-medium text-gray-700 mb-1'>Select Mode</label>
+                        <div className='flex gap-3'>
+                            {modes.map((m) => (
+                                <button
+                                    key={m}
+                                    type="button"
+                                    disabled={myShopData}
+                                    onClick={() => setMode(m)}
+                                    className={`flex-1 py-2 rounded-xl font-bold transition border-2 ${mode === m ? 'bg-orange-500 border-orange-500 text-white' : 'bg-white border-gray-200 text-gray-600'} ${myShopData && mode !== m ? 'opacity-50 grayscale' : ''}`}
+                                >
+                                    {m}
+                                </button>
                             ))}
-                        </select>
-                    </div> */}
+                        </div>
+                        {myShopData && <p className='text-[10px] text-gray-400 mt-1'>* Mode cannot be changed after shop creation</p>}
+                    </div>
 
                     <div>
                         <label className='block text-sm font-medium text-gray-700 mb-1'>

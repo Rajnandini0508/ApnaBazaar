@@ -21,6 +21,8 @@ import useGetMyOrders from './hooks/useGetMyOrders'
 import useUpdateLocation from './hooks/useUpdateLocation'
 import TrackOrderPage from './pages/TrackOrderPage'
 import Shop from './pages/Shop'
+import MyBookings from './pages/MyBookings'
+import BookingPlaced from './pages/BookingPlaced'
 import { io } from 'socket.io-client'
 import { setSocket } from './redux/userSlice'
 
@@ -66,6 +68,8 @@ function App() {
       <Route path='/checkout' element={userData ? <CheckOut /> : <Navigate to={"/signin"} />} />
       <Route path='/order-placed' element={userData ? <OrderPlaced /> : <Navigate to={"/signin"} />} />
       <Route path='/my-orders' element={userData ? <MyOrders /> : <Navigate to={"/signin"} />} />
+      <Route path='/my-bookings' element={userData ? <MyBookings /> : <Navigate to={"/signin"} />} />
+      <Route path='/booking-confirmed' element={userData ? <BookingPlaced /> : <Navigate to={"/signin"} />} />
       <Route path='/track-order/:orderId' element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />} />
       <Route path='/shop/:shopId' element={userData ? <Shop /> : <Navigate to={"/signin"} />} />
 

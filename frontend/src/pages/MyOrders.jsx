@@ -42,6 +42,23 @@ function MyOrders() {
                     <h1 className='text-2xl font-bold text-start'>My Orders</h1>
                 </div> 
 
+                {(!userData || userData.role !== 'seller') ? (
+                    <div className='flex gap-4 mb-6'>
+                        <button 
+                            className='flex-1 py-2 rounded-xl font-bold bg-[#ff4d2d] text-white shadow-md'
+                            onClick={() => navigate("/my-orders")}
+                        >
+                            Orders
+                        </button>
+                        <button 
+                            className='flex-1 py-2 rounded-xl font-bold bg-white text-gray-600 border border-gray-200'
+                            onClick={() => navigate("/my-bookings")}
+                        >
+                            Bookings
+                        </button>
+                    </div>
+                ) : null}
+
                 {myOrders?.length === 0 && (<p className="text-center text-gray-500 mt-10">You have no orders yet</p>)}
 
                 <div className='space-y-6'>

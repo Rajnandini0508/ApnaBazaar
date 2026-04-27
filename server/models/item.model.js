@@ -36,7 +36,8 @@ const itemSchema=new mongoose.Schema({
     price:{
         type:Number,
         min:0,
-        required:true
+        required:false,
+        default:0
     },
     rating:{
         average:{type:Number,default:0},

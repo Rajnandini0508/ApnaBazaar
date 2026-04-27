@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { categories } from '../category'
 import CategoryCard from './CategoryCard'
 import FoodCard from './FoodCard'
+import BookingCard from './BookingCard'
+import DisplayCard from './DisplayCard'
 import { CiCircleChevLeft } from "react-icons/ci";
 import { CiCircleChevRight } from "react-icons/ci";
 import { useSelector } from 'react-redux'
@@ -120,9 +122,17 @@ function UserDashboard() {
             {searchItems && searchItems.length>0 && (
                 <div className='w-full max-w-6xl flex flex-col gap-5 items-start p-5 bg-white shadow-md rounded-2xl mt-4'>
                     <h1 className='text-gray-900 text-2xl sm:text-xl font-semibold border-b border-gray-200 pb-2'>Seach Results</h1>
-                    <div className='w-full h-auto flex flex-wrap gap-6 justify-center'>{searchItems.map((item)=>(
-                        <FoodCard data={item} key={item._id}/>
-                    ))}</div>
+                    <div className='w-full h-auto flex flex-wrap gap-6 justify-center'>{searchItems.map((item)=>{
+                        const rawMode = item.shop?.mode || 'Order';
+                        const mode = rawMode.charAt(0).toUpperCase() + rawMode.slice(1).toLowerCase();
+                        return (
+                            <React.Fragment key={item._id}>
+                                {mode === 'Order' && <FoodCard data={item} />}
+                                {mode === 'Booking' && <BookingCard data={item} shop={item.shop} />}
+                                {mode === 'Display' && <DisplayCard data={item} />}
+                            </React.Fragment>
+                        );
+                    })}</div>
                 </div>   
             )}
 
@@ -189,11 +199,19 @@ function UserDashboard() {
             </div >
 
             <div className='w-full max-w-6xl flex flex-col gap-5 items-center p-[10px]'>
-                <h1 className='text-gray-800 text-2xl font-bold sm:text-3xl'>Suggested Food Items</h1>
+                <h1 className='text-gray-800 text-2xl font-bold sm:text-3xl'>Suggested Items</h1>
                 <div className='w-full h-auto flex flex-wrap gap-[20px] justify-center'>
-                    {updatedItemsList?.map((item, index) => (
-                        <FoodCard key={index} data={item} />
-                    ))}
+                    {updatedItemsList?.map((item, index) => {
+                        const rawMode = item.shop?.mode || 'Order';
+                        const mode = rawMode.charAt(0).toUpperCase() + rawMode.slice(1).toLowerCase();
+                        return (
+                            <React.Fragment key={index}>
+                                {mode === 'Order' && <FoodCard data={item} />}
+                                {mode === 'Booking' && <BookingCard data={item} shop={item.shop} />}
+                                {mode === 'Display' && <DisplayCard data={item} />}
+                            </React.Fragment>
+                        );
+                    })}
                 </div>
             </div>
             <div className="w-full py-12">
@@ -225,7 +243,6 @@ function UserDashboard() {
               duration-300
             `}
                                 >
-                                    {/* Header */}
                                     <div className="flex items-center gap-3 mb-4">
                                         <img
                                             src={item.img}
@@ -242,12 +259,10 @@ function UserDashboard() {
                                         </div>
                                     </div>
 
-                                    {/* Review */}
                                     <p className={`text-sm leading-relaxed mb-4 ${textColor}`}>
                                         {item.text}
                                     </p>
 
-                                    {/* Stars */}
                                     <div className="flex gap-1 text-[#ff4d2d] text-sm">
                                         ★ ★ ★ ★
                                     </div>
@@ -275,32 +290,13 @@ function UserDashboard() {
                     <span>Anytime. Anywhere.</span>
                 </p>
             </div>
-            {/* <footer className='border-t text-gray-700'>
-        <div className='container mx-auto p-4 text-center flex flex-col lg:flex-row lg:justify-between gap-2'>
-            <p className='text-sm text-gray-700 items-start justify-start'>© All Rights Reserved 2024.</p>
-
-            <div className='flex items-center gap-4 justify-center text-2xl'>
-                <a href='' className='text-[#ff4d2d] hover:bg-gray-300'>
-                    <FaFacebook size={20}/>
-                </a>
-                <a href='' className='text-[#ff4d2d] hover:bg-gray-300'>
-                    <FaInstagram size={20}/>
-                </a>
-                <a href='' className='text-[#ff4d2d] hover:bg-gray-300'>
-                    <FaLinkedin size={20}/>
-                </a>
-            </div>
-        </div>
-    </footer> */}
             <footer className="border-t bg-white">
                 <div className="container mx-auto px-4 py-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-                    {/* Left text */}
                     <p className="text-sm text-gray-600 text-center sm:text-left">
                         © 2024 ApnaBazaar. All Rights Reserved.
                     </p>
 
-                    {/* Social icons */}
                     <div className="flex items-center justify-center gap-4">
                         <a
                             href="https://github.com/Rajnandini0508"

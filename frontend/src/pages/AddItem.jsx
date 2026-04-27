@@ -33,8 +33,7 @@ function AddItem(){
                 "Salon",
                 "Others"]
     const dispatch=useDispatch()
-    const [allowOrder, setAllowOrder] = useState(false);  //added for booking
-    const [allowBooking, setAllowBooking] = useState(false);
+    const shopMode = myShopData?.mode || "Order"
 
 
     const handleSubmit=async (e)=> {
@@ -43,10 +42,14 @@ function AddItem(){
             alert("Please select an image");
             return;
         }
-          if (!name || !category || !price) {
-    alert("All fields are required");
-    return;
-  }
+          if (!name || !category) {
+            alert("Name and category are required");
+            return;
+          }
+          if (shopMode !== "Display" && !price) {
+            alert("Price is required for this shop mode");
+            return;
+          }
         setLoading(true)
         try {
             const formData = new FormData();
@@ -79,13 +82,15 @@ function AddItem(){
                         <GiShoppingBag className='text-[#ff4d2d] w-16 h-16' />
                     </div>
                     <div className='text-3xl font-extrabold text-gray-900'>
-                        Add Item
+                        {shopMode === "Booking" ? "Add Service" : "Add Item"}
                     </div>
                 </div>
                 <form className='space-y-5' onSubmit={handleSubmit}>
                     <div>
-                        <label className='block text-sm font-medium text-gray-700 mb-1'>Name</label>
-                        <input type="text" placeholder='Enter Shop Name' className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500'
+                        <label className='block text-sm font-medium text-gray-700 mb-1'>
+                            {shopMode === "Booking" ? "Service Name" : "Item Name"}
+                        </label>
+                        <input type="text" placeholder={shopMode === "Booking" ? 'Enter Service Name' : 'Enter Item Name'} className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500'
                         onChange={(e)=>setName(e.target.value)} value={name} />
                     </div>
                     
@@ -98,7 +103,9 @@ function AddItem(){
                          </div>}
                     </div>
                     <div>
-                        <label className='block text-sm font-medium text-gray-700 mb-1'>Price</label>
+                        <label className='block text-sm font-medium text-gray-700 mb-1'>
+                            Price {shopMode === "Display" && "(Optional)"}
+                        </label>
                         <input type="number" placeholder='0' className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500'
                         onChange={(e)=>setPrice(e.target.value)} value={price} />
                     </div>

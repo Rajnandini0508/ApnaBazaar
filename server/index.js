@@ -8,6 +8,7 @@ import userRouter from "./routes/user.routes.js"
 import shopRouter from "./routes/shop.routes.js"
 import itemRouter from "./routes/item.routes.js"
 import orderRouter from "./routes/order.routes.js"
+import bookingRouter from "./routes/booking.routes.js"
 import cors from "cors"
 import http from 'http'
 import { Server } from "socket.io"
@@ -19,7 +20,9 @@ const server = http.createServer(app)
 const allowedOrigins = [
     "https://apna-bazaar-7i22.vercel.app",
     "https://apna-bazaar-mu.vercel.app",
-    "http://localhost:5173"
+    "https://rajnandini0508.github.io",
+    "http://localhost:5173",
+    "http://localhost:5174"
 ];
 
 const io = new Server(server, {
@@ -52,6 +55,7 @@ app.use("/api/user", userRouter)
 app.use("/api/shop", shopRouter)
 app.use("/api/item", itemRouter)
 app.use("/api/order", orderRouter)
+app.use("/api/booking", bookingRouter)
 
 socketHandler(io)
 server.listen(port, () => {

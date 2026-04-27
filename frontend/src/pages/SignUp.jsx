@@ -9,8 +9,8 @@ import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
-
-import signupImage from "../assets/signup.png"; // 👈 your image
+import { clearSellerData } from "../redux/sellerSlice";
+import signupImage from "../assets/signup.png";
 
 function SignUp() {
   const primaryColor = "#ff4d2d";
@@ -40,6 +40,7 @@ function SignUp() {
         { withCredentials: true }
       );
 
+      dispatch(clearSellerData());
       dispatch(setUserData(result.data));
       navigate("/");
     } catch (err) {
@@ -50,7 +51,6 @@ function SignUp() {
   };
 
   const handleGoogleAuth = async () => {
-    if (!mobile) return setError("Mobile number is required");
     if (loading) return;
 
     setLoading(true);
@@ -71,10 +71,12 @@ function SignUp() {
         { withCredentials: true }
       );
 
+      dispatch(clearSellerData());
       dispatch(setUserData(data));
       navigate("/");
     } catch (err) {
       console.log(err);
+      setError(err?.response?.data?.message || err?.message || "Google Authentication failed");
     } finally {
       setLoading(false);
     }
@@ -86,8 +88,6 @@ function SignUp() {
       style={{ backgroundColor: bgColor }}
     >
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-
-        {/* 🔶 LEFT IMAGE SECTION */}
         <div className="hidden md:flex bg-[#ff4d2d] h-183 items-center justify-center">
           <img
             src={signupImage}
@@ -96,7 +96,6 @@ function SignUp() {
           />
         </div>
 
-        {/* 🔶 RIGHT FORM SECTION */}
         <div className="p-8 md:p-10">
           <h1 className="text-3xl font-bold mb-1 text-[#ff4d2d]">
             Apna<span className='text-[#16232A]'>Bazaar.</span>
@@ -105,7 +104,6 @@ function SignUp() {
             Create your account to get all the features
           </p>
 
-          {/* Full Name */}
           <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'> Full Name</label>
           <input
             className="w-full mb-3 px-4 py-2 border rounded-lg"
@@ -114,7 +112,6 @@ function SignUp() {
             onChange={(e) => setFullName(e.target.value)}
           />
 
-          {/* Email */}
           <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Email</label>
           <input
             className="w-full mb-3 px-4 py-2 border rounded-lg"
@@ -123,7 +120,6 @@ function SignUp() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          {/* Mobile */}
           <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Mobile</label>
           <input
             className="w-full mb-3 px-4 py-2 border rounded-lg"
@@ -132,7 +128,6 @@ function SignUp() {
             onChange={(e) => setMobile(e.target.value)}
           />
 
-          {/* Password */}
           <label htmlFor="fullName" className='block text-gray-700 font-medium mb-1'>Password</label>
           <div className="relative mb-3">
             <input
@@ -150,7 +145,6 @@ function SignUp() {
             </button>
           </div>
 
-          {/* Role */}
           <div className="flex gap-2 mb-4">
             {["user", "seller", "deliveryBoy"].map((r) => (
               <button
@@ -167,7 +161,6 @@ function SignUp() {
             ))}
           </div>
 
-          {/* Sign Up */}
           <button
             onClick={handleSignUp}
             disabled={loading}
@@ -182,14 +175,12 @@ function SignUp() {
             </p>
           )}
 
-          {/* Divider */}
           <div className="flex items-center my-5">
             <div className="flex-1 h-px bg-gray-300" />
             <span className="px-3 text-sm text-gray-400">Or</span>
             <div className="flex-1 h-px bg-gray-300" />
           </div>
 
-          {/* Google */}
           <button
             onClick={handleGoogleAuth}
             className="w-full py-2 border rounded-lg flex items-center justify-center gap-2"

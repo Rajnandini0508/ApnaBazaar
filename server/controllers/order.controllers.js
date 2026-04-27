@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import Shop from "../models/shop.model.js"
 import Order from "../models/order.model.js"
 import User from "../models/user.model.js";
@@ -24,7 +25,7 @@ export const placeOrder=async (req,res)=>{
         const groupItemsByShop={}
 
         cartItems.forEach(item =>{
-            const shopId=item.shop
+            const shopId = item.shop?._id || item.shop;
             if(!groupItemsByShop[shopId]){
                 groupItemsByShop[shopId]=[]
             }
@@ -33,8 +34,8 @@ export const placeOrder=async (req,res)=>{
 
         const shopOrders=await Promise.all( Object.keys(groupItemsByShop).map(async (shopId)=>{
         const shop=await Shop.findById(shopId).populate("seller")
-        if(!shop){
-            return res.status(400).json({message:"shop not found"})
+        if(!shop || !shop.seller){
+            throw new Error(`Shop or seller not found for ID: ${shopId}`)
         }
         const items=groupItemsByShop[shopId]
         const subtotal=items.reduce((sum,i)=>sum+Number(i.price)*Number(i.quantity),0)
@@ -83,13 +84,13 @@ export const placeOrder=async (req,res)=>{
 
         await newOrder.populate("shopOrders.shopOrderItems.item","name image price")
         await newOrder.populate("shopOrders.shop", "name")
-        await newOrder.populate("shopOrders.seller", "name socketId")
-        await newOrder.populate("user", "name email mobile")
+        await newOrder.populate("shopOrders.seller", "fullName socketId")
+        await newOrder.populate("user", "fullName email mobile")
 
         const io=req.app.get('io')
         if(io){
             newOrder.shopOrders.forEach(shopOrder=>{
-                const sellerSocketId=shopOrder.seller.socketId
+                const sellerSocketId=shopOrder.seller?.socketId
                 if(sellerSocketId){
                     io.to(sellerSocketId).emit('newOrder',{
                         _id: newOrder._id,
@@ -128,8 +129,8 @@ export const verifyPayment=async (req,res)=> {
 
         await order.populate("shopOrders.shopOrderItems.item","name image price")
         await order.populate("shopOrders.shop", "name")
-        await order.populate("shopOrders.seller", "name socketId")
-        await order.populate("user", "name email mobile")
+        await order.populate("shopOrders.seller", "fullName socketId")
+        await order.populate("user", "fullName email mobile")
 
         const io=req.app.get('io')
         if(io){
@@ -162,7 +163,7 @@ export const getMyOrders=async (req,res)=> {
             const orders=await Order.find({user: req.userId})
             .sort({createdAt:-1})
             .populate("shopOrders.shop","name")
-            .populate("shopOrders.seller","name email mobile")
+            .populate("shopOrders.seller","fullName email mobile")
             .populate("shopOrders.shopOrderItems.item","name image price")
 
             return res.status(200).json(orders)
@@ -204,14 +205,17 @@ export const updateOrderStatus=async (req,res)=> {
 
         shopOrder.status=status
         let deliveryBoysPayload=[]
-        if(status=="out of delivery" && !shopOrder.assignment){
+        if (status == "out of delivery") {
+            const existingAssignment = await DeliveryAssignment.findById(shopOrder.assignment);
+            if (shopOrder.assignment && existingAssignment && existingAssignment.status !== "broadcasted") {
+            } else {
             const {latitude,longitude}=order.deliveryAddress
             const nearByDeliveryBoys=await User.find({
                 role:"deliveryBoy",
                 location:{
                     $near:{
                         $geometry:{type:"Point",coordinates:[Number(longitude),Number(latitude)]},     
-                        $maxDistance:5000               
+                        $maxDistance:500000               
                     }
                 }
             })
@@ -231,13 +235,17 @@ export const updateOrderStatus=async (req,res)=> {
                 })
             }
 
-            const deliveryAssignment=await DeliveryAssignment.create({
-                order:order._id,
-                shop:shopOrder.shop,
-                shopOrderId:shopOrder._id,
-                broadcastedTo:candidates,
-                status:"broadcasted"
-            })
+            const deliveryAssignment = await DeliveryAssignment.findOneAndUpdate(
+                { _id: shopOrder.assignment || new mongoose.Types.ObjectId() },
+                {
+                    order: order._id,
+                    shop: shopOrder.shop,
+                    shopOrderId: shopOrder._id,
+                    broadcastedTo: candidates,
+                    status: "broadcasted"
+                },
+                { new: true, upsert: true }
+            )
             shopOrder.assignedDeliveryBoy=deliveryAssignment.assignedTo
             shopOrder.assignment=deliveryAssignment._id
             deliveryBoysPayload=availableBoys.map(b=>({
@@ -266,6 +274,7 @@ export const updateOrderStatus=async (req,res)=> {
                         })
                     }
                 })
+            }
             }
         }
 

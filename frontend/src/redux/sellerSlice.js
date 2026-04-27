@@ -8,9 +8,12 @@ const sellerSlice=createSlice({
     reducers:{
         setMyShopData:(state,action)=>{
         state.myShopData=action.payload
+        },
+        clearSellerData:(state)=>{
+            state.myShopData=null
         }
     }
 })
 
-export const {setMyShopData}=sellerSlice.actions
+export const {setMyShopData, clearSellerData}=sellerSlice.actions
 export default sellerSlice.reducer

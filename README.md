@@ -1,46 +1,53 @@
-# ApnaBazaar - Local Marketplace Platform 🛒
+# ApnaBazaar - Advanced Multi-Service Marketplace 🛒
 
-ApnaBazaar is a modern, full-stack marketplace application that bridges the gap between local shop owners, customers, and delivery partners. Built with the **MERN Stack**, it features real-time tracking, secure payments, and a role-based dashboard system.
+![ApnaBazaar Banner](frontend/public/images/HomePage.png)
 
----
-
-## 🔗 Live Demo
-**[Visit ApnaBazaar Live](https://apna-bazaar-mu.vercel.app)**
+ApnaBazaar is a modern, high-performance marketplace application that empowers local businesses by providing three distinct operational modes: **Order**, **Booking**, and **Display**. Built with the **MERN Stack**, it features real-time tracking, premium UI/UX, and a unified platform for commerce and services.
 
 ---
 
-## ✨ Features
+## 🚀 Professional Dashboards
+
+![Seller Dashboard](frontend/public/images/SellerDashboard.png)
+<p align="center"><i>Powerful Seller Controls for Orders, Bookings, and Showcases</i></p>
+
+![Delivery Dashboard](frontend/public/images/DeliveryBoyDashboard.png)
+<p align="center"><i>Real-time Delivery Management with Geolocation Support</i></p>
+
+Unlike traditional marketplaces, ApnaBazaar adapts to the nature of your business:
+
+- **🛒 Order Mode**: Perfect for grocery stores, bakeries, and pharmacies. Complete with cart management, UPI payments, and order tracking.
+- **📅 Booking Mode**: Designed for service providers like Salons, Tailors, and Consultants. Features a streamlined appointment booking system.
+- **🖼️ Display Mode**: Ideal for high-end galleries, car showrooms, or jewelry boutiques. Focuses on premium visual showcase without direct transactions.
+
+---
+
+## ✨ Key Features
 
 ### 👤 For Customers
-- **Location-based Discovery**: Find shops and products in your specific city.
-- **Real-time Tracking**: Watch your order status update live via WebSockets.
-- **Smart Cart**: Seamless shopping experience with persistent cart management.
-- **Secure Auth**: Login via Email/Password or Google Authentication.
+- **Multi-Service Hub**: Access groceries, services, and showrooms from a single app.
+- **Location-based Discovery**: Automatically finds shops and products in your current city.
+- **Real-time Tracking**: Integrated WebSocket support for live order status updates.
+- **Premium Auth**: Secure login via Firebase Google Auth or traditional Email/Password.
 
 ### 🏪 For Sellers
-- **Store Management**: Create your shop profile and manage your branding.
-- **Inventory Control**: Full CRUD operations for products with image uploads.
-- **Order Dashboard**: Manage incoming orders and assign them to delivery partners.
+- **Mode-Specific Dashboards**: Custom UI controls based on your shop's selected mode (Order/Booking/Display).
+- **Business Management**: Full control over shop details, inventory, and service listings.
+- **Management Center**: Dedicated "My Orders" or "My Bookings" hubs to track customer interactions.
 
 ### 🚴 For Delivery Partners
-- **Assignment System**: View and accept available delivery tasks in your area.
-- **Status Updates**: Mark orders as delivered to complete the workflow.
+- **Smart Assignment**: View and accept delivery tasks within your city.
+- **One-Tap Updates**: Quickly update order status to keep customers informed.
 
 ---
 
 ## 🛠️ Tech Stack
 
-**Frontend:**
-- React.js (Vite)
-- Redux Toolkit (State Management)
-- Tailwind CSS (Styling)
-- Socket.io-client (Real-time updates)
-
-**Backend:**
-- Node.js & Express.js
-- MongoDB & Mongoose (Database)
-- JWT & Firebase (Authentication)
-- Cloudinary (Image Hosting)
+- **Frontend**: React.js (Vite), Redux Toolkit, Tailwind CSS, Lucide Icons.
+- **Backend**: Node.js, Express.js, Socket.io (Real-time events).
+- **Database**: MongoDB (Mongoose ODM).
+- **Security**: Firebase Authentication, JWT, bcryptjs.
+- **Media**: Cloudinary (High-speed image delivery).
 
 ---
 
@@ -71,8 +78,6 @@ ApnaBazaar is a modern, full-stack marketplace application that bridges the gap 
 ---
 
 ## 🛡️ Environment Variables
-
-To run this project, you will need to add the following environment variables to your `.env` files:
 
 **Server:** `MONGODB_URI`, `JWT_SECRET`, `EMAIL`, `PASS`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_NAME`, `CLOUDINARY_API_SECRET`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`
 

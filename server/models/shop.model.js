@@ -7,7 +7,7 @@ const shopSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true
+        required: false
     },
     seller: {
         type: mongoose.Schema.Types.ObjectId,
@@ -29,6 +29,15 @@ const shopSchema = new mongoose.Schema({
     address: {
         type: String,
         required: true
+    },
+    mode: {
+        type: String,
+        enum: ["Order", "Booking", "Display"],
+        default: "Order"
+    },
+    category: {
+        type: String,
+        required: false
     },
     items: [{
         type: mongoose.Schema.Types.ObjectId,

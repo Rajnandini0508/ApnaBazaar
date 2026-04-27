@@ -6,13 +6,15 @@ import { FaStore } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { BiSolidShoppingBags } from "react-icons/bi";
 import FoodCard from '../components/FoodCard'
+import BookingCard from '../components/BookingCard'
+import DisplayCard from '../components/DisplayCard'
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { FaPhone } from "react-icons/fa6";
 
 function Shop() {
     const { shopId } = useParams()
     const [items, setItems] = useState([])
-    const [shop, setShop] = useState([])
+    const [shop, setShop] = useState(null)
     const navigate = useNavigate()
 
     const handleShop = async () => {
@@ -21,6 +23,7 @@ function Shop() {
                 , { withCredentials: true })
             setShop(result.data.shop)
             setItems(result.data.items)
+            console.log("Current Shop Data:", result.data.shop);
         } catch (error) {
             console.log(error)
         }
@@ -61,12 +64,23 @@ function Shop() {
 
             <div className='max-w-7xl mx-auto px-6 py-10'>
                 <h2 className='flex items-center justify-center gap-3 text-3xl font-bold mb-10 text-gray-800'>
-                    <BiSolidShoppingBags color='red' /> Our Items
+                    <BiSolidShoppingBags color='red' /> 
+                    {shop?.mode === "Booking" ? "Our Services" : shop?.mode === "Display" ? "Showcase" : "Our Items"}
                 </h2>
                 {items.length > 0 ? (
-                    <div className='flex flex-wrap justify-center gap-8'>{items.map((item) => (
-                        <FoodCard data={item} />
-                    ))}</div>
+                    <div className='flex flex-wrap justify-center gap-8'>
+                        {items.map((item) => {
+                            const rawMode = shop?.mode || 'Order';
+                            const mode = rawMode.charAt(0).toUpperCase() + rawMode.slice(1).toLowerCase();
+                            return (
+                                <React.Fragment key={item._id}>
+                                    {mode === 'Order' && <FoodCard data={item} />}
+                                    {mode === 'Booking' && <BookingCard data={item} shop={shop} />}
+                                    {mode === 'Display' && <DisplayCard data={item} />}
+                                </React.Fragment>
+                            );
+                        })}
+                    </div>
                 ) : <p>No Items Available</p>}
             </div>
         </div>

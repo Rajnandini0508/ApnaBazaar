@@ -3,9 +3,9 @@ import Shop from "../models/shop.model.js"
 
 export const createEditShop = async (req, res) => {
     try {
-        const { name, city, state, address, phoneno, category } = req.body
+        const { name, city, state, address, phoneno, category, mode } = req.body
 
-        if (!req.userId) {  //added
+        if (!req.userId) {
             return res.status(401).json({ message: "Unauthorized" })
         }
         let image;
@@ -15,28 +15,20 @@ export const createEditShop = async (req, res) => {
         let shop = await Shop.findOne({ seller: req.userId })
         if (!shop) {
             shop = await Shop.create({
-                name, city, state, address, category, phoneno, image, seller: req.userId
+                name, city, state, address, category, phoneno, image, mode, seller: req.userId
             })
         }
-        // else {
-        //     shop=await Shop.findByIdAndUpdate(shop._id,{
-        //         name,city,state,address,image,seller:req.userId
-        //     },{new:true})
-        // }
-
         else {
-            // EDIT (do NOT overwrite image if not uploaded)
             shop.name = name
             shop.city = city
             shop.state = state
             shop.address = address
             shop.category = category
             shop.phoneno = phoneno
-
+            // Note: mode is not updated as per "fixed during initial creation" rule
             if (image) {
                 shop.image = image
             }
-
             await shop.save()
         }
 

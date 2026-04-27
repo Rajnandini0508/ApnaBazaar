@@ -3,14 +3,15 @@ import { FaLocationDot } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
+import { BsCalendarCheck } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import { LuReceiptIndianRupee } from "react-icons/lu";
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { serverUrl } from '../App'
-import { setUserData } from '../redux/userSlice'
-import { setSearchItems } from '../redux/userSlice'
+import { setUserData, setSearchItems } from '../redux/userSlice'
+import { clearSellerData } from '../redux/sellerSlice';
 
 function Nav(){
     const {userData, currentCity,cartItems}=useSelector(state=>state.user)
@@ -26,6 +27,8 @@ function Nav(){
             const result=await axios.get(`${serverUrl}/api/auth/signout`,
                 {withCredentials:true})
                 dispatch(setUserData(null))
+                dispatch(clearSellerData())
+                navigate("/signin")
         } catch (error) {
             console.log(error)
         }
@@ -87,25 +90,44 @@ function Nav(){
 
 
                 {userData.role=="seller"? <>
-                {myShopData && <>
-                    <button className='hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
-                    onClick={()=>navigate("/add-item")}>
-                        <FaPlus size={20}/>
-                        <span>Add Shop Item</span>
-                    </button>
-                    <button className='flex md:hidden items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
-                    onClick={()=>navigate("/add-item")}>
-                        <FaPlus size={20}/>
-                    </button> </>}
+                {myShopData && (
+                    <>
+                        <button className='hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
+                        onClick={()=>navigate("/add-item")}>
+                            <FaPlus size={20}/>
+                            <span>{myShopData.mode === 'Booking' ? 'Add Service' : 'Add Shop Item'}</span>
+                        </button>
+                        <button className='flex md:hidden items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]'
+                        onClick={()=>navigate("/add-item")}>
+                            <FaPlus size={20}/>
+                        </button> 
 
-                    <div className='hidden md:flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium' onClick={()=>navigate("/my-orders")}>
-                        <LuReceiptIndianRupee size={20}/>
-                        <span>My Orders</span>
-                    </div>
+                        {myShopData.mode === 'Order' && (
+                            <>
+                                <div className='hidden md:flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium' onClick={()=>navigate("/my-orders")}>
+                                    <LuReceiptIndianRupee size={20}/>
+                                    <span>My Orders</span>
+                                </div>
+                                <div className='md:hidden flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium' onClick={()=>navigate("/my-orders")}>
+                                    <LuReceiptIndianRupee size={20}/>
+                                </div>
+                            </>
+                        )}
 
-                    <div className='md:hidden flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium' onClick={()=>navigate("/my-orders")}>
-                        <LuReceiptIndianRupee size={20}/>
-                    </div>
+                        {myShopData.mode === 'Booking' && (
+                            <>
+                                <div className='hidden md:flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium' onClick={()=>navigate("/my-bookings")}>
+                                    <BsCalendarCheck size={18}/>
+                                    <span>My Bookings</span>
+                                </div>
+                                <div className='md:hidden flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium' onClick={()=>navigate("/my-bookings")}>
+                                    <BsCalendarCheck size={18}/>
+                                </div>
+                            </>
+                        )}
+                    </>
+                )}
+
                 </>: (
                     <>
 
@@ -115,7 +137,9 @@ function Nav(){
                             <span className='absolute right-[-9px] top-[-12px] text-[#ff4d2d]'>{cartItems.length}</span>
                         </div>}
                         
-                        <button className='hidden md:block px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium' onClick={()=>navigate("/my-orders")}>My Orders</button>
+                        <div className='hidden md:flex gap-2'>
+                            <button className='px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium' onClick={()=>navigate("/my-orders")}>My Orders</button>
+                        </div>
                     </>
                 )}
 
@@ -124,11 +148,20 @@ function Nav(){
                     {userData?.fullName.slice(0,1)}
                 </div>
                 {showInfo && 
-                <div className={`fixed top-[80px] right-[10px] ${userData.role=="deliveryBoy"?"md:right-[20%] lg:right-[40%]":"md:right-[10%] lg:right-[25%]"} w-[180px] bg-white shadow-2xl rounded-xl p-[20px] flex flex-col gap=[10px] z-[9999]`}>
-                    <div className='text-[17px] font-semibold'>{userData.fullName}</div>
-                    {userData.role=="user" && 
-                    <div className='md:hidden text-[#ff4d2d] font-semibold cursor-pointer' onClick={()=>navigate("/my-orders")}>My Orders</div>}
-                    <div className='text-[#ff4d2d] font-semibold cursor-pointer' onClick={handleLogOut}>Log Out</div>
+                <div className={`fixed top-[80px] right-[10px] ${userData.role=="deliveryBoy"?"md:right-[20%] lg:right-[40%]":"md:right-[10%] lg:right-[25%]"} w-[180px] bg-white shadow-2xl rounded-xl p-[20px] flex flex-col gap-[12px] z-[9999]`}>
+                    <div className='text-[17px] font-semibold border-b pb-2 mb-1'>{userData.fullName}</div>
+                    {userData.role=="user" && (
+                        <>
+                            <div className='md:hidden text-gray-700 font-medium cursor-pointer hover:text-[#ff4d2d]' onClick={()=>navigate("/my-orders")}>My Orders</div>
+                        </>
+                    )}
+                    {userData.role=="seller" && myShopData && (
+                        <>
+                            {myShopData.mode === 'Order' && <div className='md:hidden text-gray-700 font-medium cursor-pointer hover:text-[#ff4d2d]' onClick={()=>navigate("/my-orders")}>My Orders</div>}
+                            {myShopData.mode === 'Booking' && <div className='md:hidden text-gray-700 font-medium cursor-pointer hover:text-[#ff4d2d]' onClick={()=>navigate("/my-bookings")}>My Bookings</div>}
+                        </>
+                    )}
+                    <div className='text-[#ff4d2d] font-bold cursor-pointer hover:scale-105 transition' onClick={handleLogOut}>Log Out</div>
                 </div>}
             </div>
         </div>

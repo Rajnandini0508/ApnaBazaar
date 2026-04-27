@@ -1,9 +1,11 @@
 import React,{useEffect, useState} from 'react'
+import axios from 'axios'
 import Nav from "./Nav.jsx"
 import { useSelector } from 'react-redux'
 import { serverUrl } from '../App'
 import DeliveryBoyTracking from './DeliveryBoyTracking'
 import { ResponsiveContainer,BarChart,CartesianGrid,XAxis,YAxis,Tooltip,Bar } from 'recharts'
+import { ClipLoader } from 'react-spinners'
 
 function DeliveryBoy() {
     const {userData,socket}=useSelector(state=>state.user)
@@ -15,6 +17,7 @@ function DeliveryBoy() {
     const [deliveryBoyLocation,setDeliveryBoyLocation]=useState("")
     const [loading,setLoading]=useState(false)
     const [message,setMessage]=useState("")
+    const [areaName, setAreaName] = useState("Fetching area...")
 
     useEffect(()=>{
         if(!socket || userData.role!=="deliveryBoy") return
@@ -38,6 +41,24 @@ function DeliveryBoy() {
             if(watchId) navigator.geolocation.clearWatch(watchId)
         }
     },[socket,userData])
+
+    useEffect(() => {
+        const fetchAreaName = async () => {
+            if (deliveryBoyLocation.lat && deliveryBoyLocation.lon) {
+                try {
+                    const apiKey = import.meta.env.VITE_GEOAPIKEY;
+                    const response = await fetch(`https://api.geoapify.com/v1/geocode/reverse?lat=${deliveryBoyLocation.lat}&lon=${deliveryBoyLocation.lon}&format=json&apiKey=${apiKey}`);
+                    const data = await response.json();
+                    if (data.results && data.results.length > 0) {
+                        setAreaName(data.results[0].address_line2 || data.results[0].city || "Unknown Area");
+                    }
+                } catch (error) {
+                    console.log("Error fetching area name:", error);
+                }
+            }
+        };
+        fetchAreaName();
+    }, [deliveryBoyLocation]);
     
     const ratePerDelivery=50
     const totalEarning=todayDeliveries.reduce((sum,d)=>sum + d.count * ratePerDelivery,0)
@@ -135,7 +156,10 @@ function DeliveryBoy() {
             <div className='w-full max-w-[800px] flex flex-col gap-5 items-center'>
                 <div className='bg-white rounded-2xl shadow-md p-5 flex flex-col justify-start items-center w-[90%] border border-orange-100 text-center gap-2'>
                     <h1 className='text-xl font-bold text-[#ff4d2d]'>Welcome, {userData.fullName}</h1>
-                    <p className='text-[#ff4d2d]'><span className='font-semibold'>Latitude:</span> {deliveryBoyLocation.lat}, <span className='font-semibold'>Longitude:</span> {deliveryBoyLocation.lon}</p>
+                    <div className='flex flex-col gap-1'>
+                        <p className='text-gray-700 font-medium'><span className='text-[#ff4d2d]'>Area:</span> {areaName}</p>
+                        <p className='text-xs text-gray-400'><span className='font-semibold'>Lat:</span> {deliveryBoyLocation.lat?.toFixed(4)}, <span className='font-semibold'>Lon:</span> {deliveryBoyLocation.lon?.toFixed(4)}</p>
+                    </div>
                 </div>
 
                 <div className='bg-white rounded-2xl shadow-md p-5 w-[90%] mb-6 border border-orange-100'>
@@ -196,7 +220,7 @@ function DeliveryBoy() {
                 {!showOtpBox ? 
                 <button className='mt-4 w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-xl shadow-md
                 hover:bg-green-600 active:scale-95 transition-all duration-200' 
-                onClick={sendOtp} disabled={loading}>{loading?<clipLoader size={20} color='white'/>:"Mark As Delivered"}</button>:
+                onClick={sendOtp} disabled={loading}>{loading?<ClipLoader size={20} color='white'/>:"Mark As Delivered"}</button>:
 
                 <div className='mt-4 p-4 border rounded-xl bg-gray-50'>
                     <p className='text-sm font-semibold mb-2'>Enter Otp Send to <span className='text-orange-500'>{currentOrder.user.fullName}</span></p>

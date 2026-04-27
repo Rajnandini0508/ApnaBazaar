@@ -6,12 +6,34 @@ import { useNavigate } from 'react-router-dom'
 import { FaPen } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
 import SellerItemCard from './SellerItemCard'
+import SellerBookingCard from './SellerBookingCard'
 import useGetSellerOrders from "../hooks/useGetSellerOrders";
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { serverUrl } from '../App'
+import { useDispatch } from 'react-redux'
+import { setBookings } from '../redux/bookingSlice'
 
 function SellerDashboard() {
     const { myShopData } = useSelector(state => state.seller)
+    const { bookings } = useSelector(state => state.booking)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     useGetSellerOrders();
+
+    useEffect(() => {
+        const fetchBookings = async () => {
+            if (myShopData?.mode === 'Booking') {
+                try {
+                    const res = await axios.get(`${serverUrl}/api/booking/my-bookings`, { withCredentials: true });
+                    dispatch(setBookings(res.data));
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        };
+        fetchBookings();
+    }, [myShopData, dispatch]);
 
     return (
         <div className='w-full min-h-screen bg-[#fff9f6] flex flex-col items-center'>
@@ -54,25 +76,22 @@ function SellerDashboard() {
                         </div>
                     </div>
 
-                    {myShopData.items.length == 0 &&
-                        <div>
-                            <div className='flex justify-center items-center p-4 sm:p-6'>
-                                <div className='w-full max-w-md bg-white shadow-lg rounded-2xl p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300'>
-                                    <div className='flex flex-col items-center text-center'>
-                                        <BsShop className='text-[#ff4d2d] w-16 h-16 sm:w-20 sm:h-20 mb-4' />
-                                        <h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-2'>Your Shop Item</h2>
-                                        <p className='text-gray-600 mb-4 text-sm sm:text-base'>Showcase what your shop offers and connect with customers around you.</p>
-                                        <button className='bg-[#ff4d2d] text-white px-5 sm:px-6 py-2 rounded-full font-medium shadow-md hover:bg-orange-600 transition-colors duration-200'
-                                            onClick={() => navigate("/add-item")}>Add Item</button>
-                                    </div>
-                                </div>
+                    <div className='w-full max-w-3xl flex flex-col items-center gap-4'>
+                        <h2 className='text-xl font-bold text-gray-800 self-start mb-2 px-2'>
+                            {myShopData.mode === 'Booking' ? 'Your Services' : 'Your Shop Items'}
+                        </h2>
+                        {myShopData.items.length === 0 ? (
+                            <div className='w-full bg-white shadow-lg rounded-2xl p-6 border border-gray-100 text-center'>
+                                <p className='text-gray-600 mb-4'>Showcase what your shop offers and connect with customers around you.</p>
+                                <button className='bg-[#ff4d2d] text-white px-6 py-2 rounded-full font-medium'
+                                    onClick={() => navigate("/add-item")}>Add {myShopData.mode === 'Booking' ? 'Service' : 'Item'}</button>
                             </div>
-                        </div>}
-
-                    {myShopData.items.length > 0 &&
-                        <div className='flex flex-col items-center gap-4 w-full max-w-3xl'>
-                            {myShopData.items.map((item, index) => (<SellerItemCard data={item} key={index} />))}
-                        </div>}
+                        ) : (
+                            <>
+                                {myShopData.items.map((item, index) => (<SellerItemCard data={item} key={index} />))}
+                            </>
+                        )}
+                    </div>
                 </div>}
 
         </div>

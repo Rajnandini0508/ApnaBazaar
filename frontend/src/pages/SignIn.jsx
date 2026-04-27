@@ -9,6 +9,7 @@ import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/userSlice";
+import { clearSellerData } from "../redux/sellerSlice";
 
 import authImage from "../assets/signup.png"; 
 
@@ -25,7 +26,6 @@ function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // 🔐 Normal Sign In
   const handleSignIn = async () => {
     if (loading) return;
     setLoading(true);
@@ -38,6 +38,7 @@ function SignIn() {
         { withCredentials: true }
       );
 
+      dispatch(clearSellerData());
       dispatch(setUserData(result.data));
       navigate("/");
     } catch (err) {
@@ -47,7 +48,6 @@ function SignIn() {
     }
   };
 
-  // 🔐 Google Sign In
   const handleGoogleAuth = async () => {
     if (loading) return;
 
@@ -60,14 +60,20 @@ function SignIn() {
 
       const { data } = await axios.post(
         `${serverUrl}/api/auth/google-auth`,
-        { email: result.user.email },
+        { 
+          email: result.user.email,
+          fullName: result.user.displayName,
+          role: "user" 
+        },
         { withCredentials: true }
       );
 
+      dispatch(clearSellerData());
       dispatch(setUserData(data));
       navigate("/");
     } catch (err) {
       console.log(err);
+      setError(err?.response?.data?.message || err?.message || "Google Authentication failed");
     } finally {
       setLoading(false);
     }
@@ -80,7 +86,6 @@ function SignIn() {
     >
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
 
-        {/* 🔶 LEFT IMAGE SECTION */}
        <div className="hidden md:relative md:flex bg-[#ff4d2d] h-140 overflow-hidden">
   <img
     src={authImage}
@@ -90,7 +95,6 @@ function SignIn() {
 </div>
 
 
-        {/* 🔶 RIGHT FORM SECTION */}
         <div className="p-8 md:p-10">
           <h1 className="text-3xl font-bold mb-1 text-[#ff4d2d]">
             Apna<span className='text-[#16232A]'>Bazaar.</span>
@@ -99,7 +103,6 @@ function SignIn() {
             Hi! Welcome back, you’ve been missed
           </p>
 
-          {/* Email */}
           <label htmlFor="password" className='block text-gray-700 font-medium mb-1'>Email</label>
           <input
             className="w-full mb-4 px-4 py-2 border rounded-lg"
@@ -108,7 +111,6 @@ function SignIn() {
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          {/* Password */}
           <label htmlFor="password" className='block text-gray-700 font-medium mb-1'>Password</label>
           <div className="relative mb-4">
             <input
@@ -127,7 +129,6 @@ function SignIn() {
             </button>
           </div>
 
-          {/* Forgot password */}
           <div
             className="text-right mb-4 text-[#ff4d2d] font-medium cursor-pointer"
             onClick={() => navigate("/forgot-password")}
@@ -135,7 +136,6 @@ function SignIn() {
             Forgot Password?
           </div>
 
-          {/* Sign In */}
           <button
             onClick={handleSignIn}
             disabled={loading}
@@ -150,14 +150,12 @@ function SignIn() {
             </p>
           )}
 
-          {/* Divider */}
           <div className="flex items-center my-5">
             <div className="flex-1 h-px bg-gray-300" />
             <span className="px-3 text-sm text-gray-400">Or</span>
             <div className="flex-1 h-px bg-gray-300" />
           </div>
 
-          {/* Google */}
           <button
             onClick={handleGoogleAuth}
             className="w-full py-2 border rounded-lg flex items-center justify-center gap-2"
