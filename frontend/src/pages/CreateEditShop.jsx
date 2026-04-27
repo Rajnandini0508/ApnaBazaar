@@ -26,20 +26,20 @@ function CreateEditShop() {
 
     const dispatch = useDispatch()
 
-    const categories = ["Vegetable",
-        "Footwear",
-        "Grocery",
-        "Stationery",
-        "Bakery",
-        "Pharmacy",
-        "Electronic",
-        "Cafe",
-        "Fashion",
-        "Cosmetics",
-        "Generalstore",
-        "Tailor",
-        "Salon",
-        "Others"]
+    // const categories = ["Vegetable",
+    //     "Footwear",
+    //     "Grocery",
+    //     "Stationery",
+    //     "Bakery",
+    //     "Pharmacy",
+    //     "Electronic",
+    //     "Cafe",
+    //     "Fashion",
+    //     "Cosmetics",
+    //     "Generalstore",
+    //     "Tailor",
+    //     "Salon",
+    //     "Others"]
 
     const handleImage = (e) => {
         const file = e.target.files[0]
@@ -55,11 +55,11 @@ function CreateEditShop() {
             setLoading(false)
             return
         }
-        if (!category) {
-            alert("Please select a category")
-            setLoading(false)
-            return
-        }
+        // if (!category) {
+        //     alert("Please select a category")
+        //     setLoading(false)
+        //     return
+        // }
         try {
             const formData = new FormData()
             formData.append("name", name)
@@ -111,7 +111,7 @@ function CreateEditShop() {
                         </div>}
                     </div>
 
-                    <div>
+                    {/* <div>
                         <label className='block text-sm font-medium text-gray-700 mb-1'>Select Category</label>
                         <select className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500'
                             onChange={(e) => setCategory(e.target.value)} value={category}>
@@ -120,7 +120,7 @@ function CreateEditShop() {
                                 <option value={cate} key={index}>{cate}</option>
                             ))}
                         </select>
-                    </div>
+                    </div> */}
 
                     <div>
                         <label className='block text-sm font-medium text-gray-700 mb-1'>
